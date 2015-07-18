@@ -1,0 +1,28 @@
+{
+  "name": "crhme",
+  "version": "1.0.0",
+  "description": "",
+  "main": "crhme.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeForCary/crhme"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodeForCary/crhme/issues"
+  },
+  "homepage": "https://github.com/CodeForCary/crhme",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "lodash": "^3.10.0",
+    "moment": "^2.10.3",
+    "q": "^1.4.1",
+    "request-promise": "^0.4.2",
+    "stringformat": "0.0.5"
+  },
+  "devDependencies": {}
+}

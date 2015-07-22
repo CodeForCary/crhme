@@ -114,7 +114,6 @@
     },
     getPdf = function (caseNumber, date) {
       var deferred = q.defer();
-      var cancel = _.bind(deferred.reject, deferred, [ null ]);
       request({
         method: "GET",
           uri: searchUrl
@@ -135,8 +134,8 @@
 	        form: parameters[searchUrl]
 	      }).then(function (html) {
             var $ = cheerio.load(html),
-            	reportElementId = "mainContent_gvSummary_lbGetReport_0";
-            if ($("#" + reportElementId).length) {
+            	reportElementId = "MasterPage$mainContent$gvSummary$ctl02$lbGetReport";
+            if ($(reportElementId).length) {
 	            parameters[searchUrl] = getFormParams(html);
 	            parameters[searchUrl]["__EVENTTARGET"] = "MasterPage$mainContent$gvSummary$ctl02$lbGetReport";
 	            parameters[searchUrl]["__EVENTARGUMENT"] = "";
@@ -146,47 +145,19 @@
 		          form: parameters[searchUrl],
 		          encoding: null
 		        }).then(function (buffer) {
-		        	if (buffer) {
-		        		deferred.resolve({
-		        			id: caseNumber,
-		        			buffer: buffer
-		        		});
-		        	}
-		        	else cancel();
-		        }, cancel)
-	            .catch(cancel);
+		        	if (buffer) deferred.resolve(buffer);
+		        	else deferred.reject();
+		        }, deferred.reject)
+	            .catch(deferred.reject);
         	}
         	else {
-        		cancel();
+        		deferred.reject();
         	}
-	      }, 
-	      function (reason) {
-	      	console.log("REPORT FAILED: " + reason);
-		    cancel();
-		  })
-          .catch(cancel);
-        }, cancel)
-        .catch(cancel);
+	      }, deferred.reject)
+          .catch(deferred.reject);
+        }, deferred.reject)
+        .catch(deferred.reject);
       return deferred.promise;
-    },
-    readPdf = function (caseNumber, buffer) {
-    	var deferred = q.defer();
-    	pdfText(buffer, function (err, chunks) {
-		  	if (!err && chunks) {
-		  		deferred.resolve({
-		  		  id: caseNumber,
-	              location: chunks[202],
-	              race: chunks[215],
-	              sex: chunks[216],
-	              property: chunks[203]
-	            });
-	    	}
-	    	else {
-	    		deferred.reject(error)
-	    	}
-		});
-
-    	return deferred.promise;
     };
 
     return {
@@ -206,66 +177,39 @@
                   .replace(/\:\s?\"\,\s{0,1}/gi, ":\"")
                   .replace(/\:\s?\"\s{0,1}\"/gi, ":null");
                 var json = JSON.parse(text);
-                var incidents = _.filter(json.rows, function (row) {
-                	return row.id && row.charge && row.key === "LW";
+                var idx = 0;
+                var results = _.forEach(json.rows, function (item) {
+                	getPdf(item.id, date)
+					  .then(function (buffer) {
+					  	var fixed = idx++;
+					  	if (buffer) {
+					  	  try { 
+						  pdfText(buffer, function (err, chunks) {
+						  	if (!err && chunks) {
+					          item.location = chunks[202];
+					          item.race = chunks[215];
+					          item.sex = chunks[216];
+					          item.property = chunks[203];
+					          if (fixed === json.rows.length - 1) {
+	                	        deferred.resolve(json);
+					    	  }
+					    	}
+						  });
+						}
+						catch (ex) {
+							deferred.resolve(json);
+						}
+						}
+					}, function (error) {
+						deferred.resolve(json);
+					})
+					.catch(function (error) {
+						deferred.resolve(json);
+					}); 
                 });
-                var reportPromises = _.map(incidents, function (incident) {
-                	return getPdf(incident.id, date);
-                });
-                q.allSettled(reportPromises).then(function (results) {
-                	var readPromises = _.map(_.where(results, { state: "fulfilled" }), function (result) {
-                		return readPdf(result.value.id, result.value.buffer);
-                	});
-                	q.allSettled(readPromises).then(function (results) {
-                		console.log(results.length + "!!!");
-                		_.forEach(results, function (result) {
-                			var data = result.value;
-                		    console.log(JSON.stringify(data, null, 2));
-						  	_.forEach(_.omit(Object.keys(data), "id"), function (key) {
-						  		_.forEach(_.where(incidents, { id: data.id }), function (incident) {
-					          		incident[key] = data[key];
-					          	});
-					    	});
-						});
-                		deferred.resolve({ rows: incidents });
-                	});
-                },
-                deferred.reject)
-                .catch(function (ex) {
-                	console.log("ERROR4! " + ex.message);
-                	deferred.reject();
-                });
-     //            var results = _.forEach(json.rows, function (item, index) {
-     //            	getPdf(item.id, date)
-					//   .then(function (buffer) {
-					//   	if (buffer !== null) {
-					//   	  try { 
-					// 	  pdfText(buffer, function (err, chunks) {
-					// 	  	if (!err && chunks) {
-					//           json.rows[index].location = chunks[202];
-					//           json.rows[index].race = chunks[215];
-					//           json.rows[index].sex = chunks[216];
-					//           json.rows[index].property = chunks[203];
-					//     	}
-					// 	  });
-					// 	}
-					// 	catch (ex) {
-					// 	}
-					// 	}
-					// }, function (reason) {
-					// })
-					// .finally(function () {
-			  //         if (index === json.rows.length - 1) {
-     //        	        deferred.resolve(json);
-			  //   	  }
-					// })
-					// .catch(function (error) {
-					// 	console.log("ERROR3! " + ex.message);
-					// }); 
-     //            });
               }
               catch (ex) {
-                deferred.reject("Cannot parse response as JSON: " + ex.message);
+                deferred.reject("Cannot parse response as JSON");
               }
             }, deferred.reject);
           });

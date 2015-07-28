@@ -173,19 +173,53 @@
     	var deferred = q.defer();
     	pdfText(buffer, function (err, chunks) {
 		  	if (!err && chunks) {
-		  		deferred.resolve({
-		  		  id: caseNumber,
-	              location: chunks[202],
-	              race: chunks[215],
-	              sex: chunks[216],
-	              property: chunks[203]
-	            });
+		  		//fs.writeFileSync("./pdf/" + caseNumber + ".pdf.json", JSON.stringify(chunks, null, 2));
+		  		var caseNumberIndex = _.findIndex((chunks || []), function (chunk) {
+		  			var isCaseNumber = (chunk || "").replace(/\D/g, "").substring(0, 6) === String(caseNumber).substring(0, 6);
+		  			return isCaseNumber;
+		  		});
+		  		if (caseNumberIndex === -1) {
+		  			throw(new Error("No chunk for: " + String(caseNumber)));
+		  		}
+		  		if (caseNumberIndex >= 0) {
+			  		deferred.resolve({
+			  		  id: caseNumber,
+		              location: (function () {
+		              	var range = (chunks || []).slice(caseNumberIndex + 12, caseNumberIndex + 20);
+		              	return _.find(range, function (chunk) {
+		              		return chunk.indexOf("NC 275") !== -1;
+		              	});
+		              })(),
+		              race: chunks[215],
+		              sex: chunks[216],
+		              property: chunks[203]
+		            });
+			  	}
+		    	else {
+		    		deferred.reject("Case Number " + caseNumber + " not found in JSON response.");
+		    	}
 	    	}
 	    	else {
-	    		deferred.reject(error)
+	    		deferred.reject(err);
 	    	}
 		});
 
+    	return deferred.promise;
+    },
+    geocodeAddress = function (caseNumber, address) {
+    	var deferred = q.defer();
+    	geocoder.getCoordinates(address).then(function (result) {
+    		if (result && result.lat && result.lng) {
+	    		deferred.resolve({
+		  		  id: caseNumber,
+	              coordinates: [result.lat, result.lng]
+	            });
+	    	}
+	    	else {
+	    		deferred.reject("No coordinates returned");
+	    	}
+    	},
+    	deferred.reject);
     	return deferred.promise;
     };
 
@@ -217,52 +251,49 @@
                 		return readPdf(result.value.id, result.value.buffer);
                 	});
                 	q.allSettled(readPromises).then(function (results) {
-                		console.log(results.length + "!!!");
                 		_.forEach(results, function (result) {
                 			var data = result.value;
-                		    console.log(JSON.stringify(data, null, 2));
-						  	_.forEach(_.omit(Object.keys(data), "id"), function (key) {
-						  		_.forEach(_.where(incidents, { id: data.id }), function (incident) {
-					          		incident[key] = data[key];
-					          	});
-					    	});
+                			if (data) {
+							  	_.forEach(_.omit(Object.keys(data), "id"), function (key) {
+							  		_.forEach(_.where(incidents, { id: data.id }), function (incident) {
+						          		incident[key] = data[key];
+						          	});
+						    	});
+							}
 						});
-                		deferred.resolve({ rows: incidents });
+
+						var geocodePromises = _.map(incidents, function (incident) {
+							return geocodeAddress(incident.id, incident.location);
+						});
+						q.allSettled(geocodePromises).then(function (results) {
+							_.forEach(results, function (result) {
+								if (result && result.value) {
+									_.forEach(_.where(incidents, { id: result.value.id }), function (incident) {
+						          		incident.coordinates = result.value.coordinates;
+						          	});
+								}
+							});
+
+							deferred.resolve({ rows: incidents });
+						},
+						function (reason) {
+							console.log("ERROR5! " + ex.message);
+							deferred.reject(reason);
+						})						
+		                .catch(function (ex) {
+		                	console.log("ERROR6! " + ex.message);
+		                	deferred.reject(ex.message);
+		                });
                 	});
                 },
-                deferred.reject)
+                function (reason) {
+					console.log("ERROR11! " + ex.message);
+					deferred.reject(reason);
+				})
                 .catch(function (ex) {
                 	console.log("ERROR4! " + ex.message);
                 	deferred.reject();
                 });
-     //            var results = _.forEach(json.rows, function (item, index) {
-     //            	getPdf(item.id, date)
-					//   .then(function (buffer) {
-					//   	if (buffer !== null) {
-					//   	  try { 
-					// 	  pdfText(buffer, function (err, chunks) {
-					// 	  	if (!err && chunks) {
-					//           json.rows[index].location = chunks[202];
-					//           json.rows[index].race = chunks[215];
-					//           json.rows[index].sex = chunks[216];
-					//           json.rows[index].property = chunks[203];
-					//     	}
-					// 	  });
-					// 	}
-					// 	catch (ex) {
-					// 	}
-					// 	}
-					// }, function (reason) {
-					// })
-					// .finally(function () {
-			  //         if (index === json.rows.length - 1) {
-     //        	        deferred.resolve(json);
-			  //   	  }
-					// })
-					// .catch(function (error) {
-					// 	console.log("ERROR3! " + ex.message);
-					// }); 
-     //            });
               }
               catch (ex) {
                 deferred.reject("Cannot parse response as JSON: " + ex.message);

@@ -1,0 +1,198 @@
+[
+  {
+    "id": "Cary_15006187",
+    "datetime": "2015-07-21T01:55:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T01:55:00.000",
+      "inc_no": "15006187",
+      "lcr_desc": "ASSAULT - SIMPLE PHYSICAL (NON-AGGRAVATED)",
+      "location": {
+        "type": "Point",
+        "description": "107 Heidinger Dr, Cary NC  27511",
+        "coordinates": [
+          35.7532724,
+          -78.76969799999999
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 1:55 AM. The Cary Police described it as Assault - Simple Physical (Non-aggravated)"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "107 Heidinger Dr, Cary NC  27511",
+      "coordinates": [
+        35.7532724,
+        -78.76969799999999
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006188",
+    "datetime": "2015-07-21T03:45:37.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T03:45:37.000",
+      "inc_no": "15006188",
+      "lcr_desc": "LARCENY - SHOPLIFTING",
+      "location": {
+        "type": "Point",
+        "description": "107 Heidinger Dr, Cary NC  27511",
+        "coordinates": [
+          35.7532724,
+          -78.76969799999999
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 3:45 AM. The Cary Police described it as Larceny - Shoplifting"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "107 Heidinger Dr, Cary NC  27511",
+      "coordinates": [
+        35.7532724,
+        -78.76969799999999
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006189",
+    "datetime": "2015-07-21T04:00:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T04:00:00.000",
+      "inc_no": "15006189",
+      "lcr_desc": "DRUGS - DRUG VIOLATIONS (POSS./SELL/MAN./DEL./TRNSPRT/CULT.)",
+      "location": {
+        "type": "Point",
+        "description": "1618 Kilarney Dr, Cary NC 27511",
+        "coordinates": [
+          35.756094,
+          -78.788699
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 4:00 AM. The Cary Police described it as Drugs - Drug Violations (Poss./sell/man./del./trnsprt/cult.)"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "1618 Kilarney Dr, Cary NC 27511",
+      "coordinates": [
+        35.756094,
+        -78.788699
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006191",
+    "datetime": "2015-07-21T04:00:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T04:00:00.000",
+      "inc_no": "15006191",
+      "lcr_desc": "LARCENY - FROM MOTOR VEHICLE",
+      "location": {
+        "type": "Point",
+        "description": "1433 Lily Creek Dr, Cary NC 27518",
+        "coordinates": [
+          35.7005459,
+          -78.7910349
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 4:00 AM. The Cary Police described it as Larceny - From Motor Vehicle"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "1433 Lily Creek Dr, Cary NC 27518",
+      "coordinates": [
+        35.7005459,
+        -78.7910349
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006198",
+    "datetime": "2015-07-21T11:00:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T11:00:00.000",
+      "inc_no": "15006198",
+      "lcr_desc": "ALL OTHER - MISSING PERSON",
+      "location": {
+        "type": "Point",
+        "description": "1618 Kilarney Dr, Cary NC 27511",
+        "coordinates": [
+          35.756094,
+          -78.788699
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 11:00 AM. The Cary Police described it as All Other - Missing Person"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "1618 Kilarney Dr, Cary NC 27511",
+      "coordinates": [
+        35.756094,
+        -78.788699
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006203",
+    "datetime": "2015-07-20T17:30:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-20T17:30:00.000",
+      "inc_no": "15006203",
+      "lcr_desc": "LARCENY - SHOPLIFTING",
+      "location": {
+        "type": "Point",
+        "description": "1618 Kilarney Dr, Cary NC 27511",
+        "coordinates": [
+          35.756094,
+          -78.788699
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Mon Jul 20 at 5:30 PM. The Cary Police described it as Larceny - Shoplifting"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "1618 Kilarney Dr, Cary NC 27511",
+      "coordinates": [
+        35.756094,
+        -78.788699
+      ]
+    }
+  },
+  {
+    "id": "Cary_15006209",
+    "datetime": "2015-07-21T15:49:00.000",
+    "type": "Crime Alert",
+    "properties": {
+      "inc_datetime": "2015-07-21T15:49:00.000",
+      "inc_no": "15006209",
+      "lcr_desc": "ALL OTHER - ASSIST OTHER AGENCY",
+      "location": {
+        "type": "Point",
+        "description": "107 Heidinger Dr, Cary NC  27511",
+        "coordinates": [
+          35.7532724,
+          -78.76969799999999
+        ]
+      },
+      "datasetid": "Cary Police Report",
+      "title": "A crime incident happened near you on Tue Jul 21 at 3:49 PM. The Cary Police described it as All Other - Assist Other Agency"
+    },
+    "geometry": {
+      "type": "Point",
+      "description": "107 Heidinger Dr, Cary NC  27511",
+      "coordinates": [
+        35.7532724,
+        -78.76969799999999
+      ]
+    }
+  }
+]

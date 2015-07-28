@@ -17,7 +17,7 @@
   };
 
   String.prototype.toTitleCase = function () {
-    return this.replace(/\w\S*/g, function (text) {
+    return this.replace(/[\w\/\-]\S*/g, function (text) {
       return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
     });
   };
@@ -50,15 +50,13 @@
           (record.charge || record.crime).toTitleCase());
       };
 
-      console.log(result.rows.length);
-
       var transformed = _.map(result.rows, function (row) {
         var datetime = extrude.date(row.time) + "T" + 
             (extrude.time(row.time) || "00:00:00.000"),
           location = {
             type: "Point",
             description: row.location,
-            coordinates: []
+            coordinates: row.coordinates || []
           };
 
         return {
